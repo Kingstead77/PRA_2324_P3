@@ -18,7 +18,7 @@ class BSTree {
                 throw std::runtime_error("Nodo no encontrado");
             }
             else if (e > n->elem){
-                return search(n.right, e);
+                return search(n->right, e);
             }
             else if (e < n->elem){
                 return search(n->left, e);
@@ -29,7 +29,7 @@ class BSTree {
 
         BSNode<T>* insert (BSNode<T>* n, T e){
             if (n == nullptr){
-                Node(e);
+                n = new BSNode<T>(e);
             }
             else if(e == n->elem){
                 throw std::runtime_error("Nodo ya existente");
@@ -110,7 +110,7 @@ class BSTree {
         //busqueda de elementos
 
         T search(T e) const{
-            return search(root, e).elem;
+            return search(root, e)->elem;
         }
 
         T operator[] (T e) const{
@@ -118,7 +118,7 @@ class BSTree {
         }
 
         void insert (T e){
-            return insert(root, e);
+            root = insert(root, e);
         }
 
         friend std::ostream& operator<<(std::ostream& out, const BSTree<T>& bst){
