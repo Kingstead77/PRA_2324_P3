@@ -13,8 +13,6 @@ class BSTreeDict: public Dict<V> {
     private:
         BSTree<TableEntry<V>>* tree;
 
-        
-
     public:
         
         BSTreeDict(){
@@ -25,28 +23,36 @@ class BSTreeDict: public Dict<V> {
             delete tree;
         }
         
+        // En lugar de acceder directamente a root o print_inorder, se reutiliza el operador << ya implementado en BSTree
         friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs){
-            bs.tree->print_inorder(out, bs.tree -> root);
+            out << *(bs.tree);
             return out;
+        }
+
+        V search(std::string key) override{
+            TableEntry<V> entry(key); 
+            TableEntry<V> found = tree->search(entry); 
+            return found.value;
         }
 
         V operator[](std::string key){
             return search(key);
         }
-        
+
         // Metodos heredados de Dict.h
 
         void insert(std::string key, V value) override{
-            insert(key);
+            TableEntry<V> TableEntry(key, value);   //objeto TableEntry
+            tree->insert(TableEntry);
         }
 
-        V search(std::string key) override{
-            search(key);
+        V remove(std::string key) override {
+            //TableEntry<V> entry(key); 
+            TableEntry<V> found = tree->search(key); 
+            tree->remove(found); 
+            return found.value; 
         }
 
-        V remove(std::string key) override{
-            remove(key);
-        }
         
         int entries() override{
             return tree->size();
