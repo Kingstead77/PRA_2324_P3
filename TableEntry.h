@@ -17,13 +17,16 @@ class TableEntry {
         }                                   
         TableEntry(std::string key){
             this->key = key;
+            this->value = V{};
         }           
         TableEntry(){
             this->key = " ";
+            this->value = V{};
         }                           
 
+        
         friend bool operator== (const TableEntry<V> &te1, const TableEntry<V> &te2){
-            return te1.key == te2.key && te1.value == te2.value;
+            return te1.key == te2.key;
         }
         friend bool operator!= (const TableEntry<V> &te1, const TableEntry<V> &te2){
             return !(te1 == te2);
@@ -31,6 +34,16 @@ class TableEntry {
         friend std::ostream& operator<< (std::ostream &out, const TableEntry<V> &te){
             out << "[" << te.key << ": " << te.value << "]";
             return out;
+        }
+
+        //Arbol binario
+        
+        friend bool operator<(const TableEntry<V> &te1, const TableEntry<V> &te2){
+            return te1.key < te2.key;
+        }
+
+        friend bool operator>(const TableEntry<V> &te1, const TableEntry<V> &te2){
+            return te1.key > te2.key;
         }
 };
 

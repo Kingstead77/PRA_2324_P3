@@ -9,7 +9,7 @@
 #include "../../Practica1/PRA_2324_P1/ListLinked.h" 
 
 using namespace std;
-
+ 
 template <typename V>
 class HashTable: public Dict<V> {
 
@@ -29,94 +29,78 @@ class HashTable: public Dict<V> {
         }                                       //resto de la división entre la suma de los valores ASCII y el tamaño de la tabla hash
 
     public:
-        
-        void insert(std::string key, V value) override {
+        HashTable(int size){
             
+            table = new ListLinked<TableEntry<V>> [size];
+            n = 0;      //numero de elementos de la tabla
+            max = size ;
+        }
+
+        ~HashTable(){
+            delete [] table;
+        }
+
+        void insert(string key, V value) override{
+            TableEntry<V> entrada = TableEntry<V>(key, value);
             int pos = h(key);
-
-            if (table[pos] == nullptr) {
-                table[pos] = new ListLinked<TableEntry<V>>();
-            }
-
-            for (const auto& entry : *(table[pos])) {
-                if (entry.key == key) {
-                    throw runtime_error();
+            for(int i = 0; i < table[pos].size(); i++){  
+                if(table[pos].get(i).key == key){ 
+                    throw std::runtime_error("");
                 }
             }
-            table[pos]->insert(TableEntry<V>(key, value));
-            ++n;
+
+            table[pos].prepend(entrada);  //añadimos el elemento al principio porque el orden no importa 
+            n++;           
+        }
+    
+
+        V search(string key) override{
+            return operator[](key);
         }
 
 
-        V search(std::string key) override {    //Busca el valor correspondiente a key. Devuelve el valor value asociado si key está en el diccionario.
+        V remove(string key) override{
             int pos = h(key);
-            if (table[pos] == nullptr) {
-                throw runtime_error();
+            for(int i = 0; i < table[pos].size(); i++){  
+                if(table[pos].get(i).key == key){    
+                V valor = table[pos].get(i).value;
+                    table[pos].remove(i);
+                    n--;
+                    return valor;
+                }
             }
-            Node<V>* current = table[pos];
-            //const auto& item = table[pos];  //me creo una variable referencia "&" item con "auto", para que coincida el tipo y con ello comparo las keys 
-            while(current != nullptr){
-                if (current.key == key){
-                    return current.value;
-                }else 
-                    throw runtime_error();
-                current = current->next;
-            }
-        }
 
-        V remove(std::string key) override{     //Elimina el par key->value si se encuentra en el diccionario
-            int pos = h(key);
-            if (table[pos] == nullptr) {
-                throw runtime_error();
-            }
-            table[pos] == nullptr;
+            throw std::runtime_error("");
+
         }
         
         int entries() override{                 //Devuelve el número de elementos que tiene el Diccionario
             return n;
         }
 
-        HashTable(int size){
-            
-            table = new ListLinked<TableEntry<V>>;
-            for (int i = 0; i < size; i++){
-                table[i] = nullptr;
-
-            }
-            n = 0;      //numero de elementos de la tabla
-            max = 0;
-        }
-
-        ~HashTable(){
-            for (int i = 0; i < max; i++){
-                delete table[i];
-            }
-        }
-
         int capacity(){
             return max;
         }
 
-        friend std::ostream& operator<< (std::ostream &out, const HashTable<V> &th){
-            for (int i = 0; i < th.max; i++){
-                cout << "Indice " << i << ": ";
-                if (th.table[i] != nullptr){
-                    for (const auto& entry : *(th.table[i])){ //*(th.table[i]) es la lista enlazada desreferenciada, th.table[i] es un puntero, no una lista
-                        out << "[" << entry.key << ": " << entry.value << "]" << endl;
-                    }
-                }else
-                    out << "---" << endl;
+        friend ostream& operator<<(ostream &out, 
+        const HashTable<V> &th){
+            for(int i = 0; i < th.max; i++){
+                out <<  "Posición " << i <<" : "  << th.table[i] << endl;
+                
             }
-
             return out;
-
         }
 
         V operator[] (std::string key){
-            if(!(h(key)))
-                throw runtime_error();
-            return key;
+            int pos = h(key);
+            for (int i = 0; i < table[pos].size(); i++){
+                if(table[pos].get(i).key == key){
+                    return table[pos].get(i).value;
+                }
+            }
+            throw std::runtime_error("");
         }
+    
 };
 
 #endif
