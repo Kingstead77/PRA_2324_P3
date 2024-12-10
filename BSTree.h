@@ -65,11 +65,11 @@ class BSTree {
         }
 
         BSNode<T>* remove_max(BSNode<T>* n){
-            if (n->right = nullptr){    //si no tiene hijo derecho (es el más grande), devuelve el hijo izquierdo. Si tampoco tiene devuelve null eliminándose
+            if (n->right == nullptr){    //si no tiene hijo derecho (es el más grande), devuelve el hijo izquierdo. Si tampoco tiene devuelve null eliminándose
                 return n->left;
             }else{
                 n->right = remove_max(n->right); //si ha retornado null (es el más grande), se elimina el nodo ya que apunta a nullptr
-                return n;   //devuelve
+                return n;   
             }
         }
 
@@ -83,24 +83,24 @@ class BSTree {
             else if (e < n->elem){
                 n->left = remove(n->left, e);
             }else{  //ya estamos en el nodo
-                if (n->left != nullptr && n->right != nullptr){  // 1. Tiene dos hijos
-                    n->elem = max(n->left);                  //ponemos el máximo de la izquierda en n->elem 
-                    n->left = remove_max(n->left);                  //borramos el máximo de la izquierda
+                if (n->left != nullptr && n->right != nullptr){ // Tiene dos hijos
+                    n->elem = max(n->left);                     // ponemos el máximo de la izquierda en n->elem 
+                    n->left = remove_max(n->left);              // borramos el máximo de la izquierda
                     return n;
                 }
-                else if(n->left != nullptr){                // 2. Tiene hijo a la izquierda
-                    BSNode<T>* sustituto = n->left;         //guardamos el hijo izquierdo
-                    delete n;                               //borramos el actual
-                    return sustituto;                       //devolvemos el izquierdo
+                else if(n->left != nullptr){    // Tiene hijo a la izquierda
+                    BSNode<T>* sustituto = n->left;         
+                    delete n;                               
+                    return sustituto;                       
                 }
-                else if(n->right != nullptr){               //3. Tiene hijo a la derecha
-                    BSNode<T>* sustituto = n->right;        //aplicamos lo mismo
+                else if(n->right != nullptr){   // Tiene hijo a la derecha
+                    BSNode<T>* sustituto = n->right;        
                     delete n;
                     return sustituto;
                 }
-                else{
-                    delete n;                               //4. No tiene hijos :( 
-                    return nullptr;                         //lo borramos y ya jaja :)
+                else{   //4. No tiene hijos
+                    delete n;                               
+                    return nullptr;                         
                 }
                 nelem--;
             }
